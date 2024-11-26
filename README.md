@@ -315,12 +315,13 @@ void agregarAColeccion(const string& track_id) {
         cout << "Track ID no encontrado.\n";
     }
 }
-b) Eliminar Canciones de la Colección
+
+# b) Eliminar Canciones de la Colección
 La nueva funcionalidad de eliminación de canciones se implementó mediante la función eliminarDeColeccion, que permite eliminar canciones de la lista de reproducción por su track_id. Se realiza una búsqueda en la lista de canciones agregadas y, si se encuentra la canción, se elimina de la lista.
 
 Código:
 
-void eliminarDeColeccion(const string& track_id) {
+  void eliminarDeColeccion(const string& track_id) {
     auto it = find_if(canciones_agregadas.begin(), canciones_agregadas.end(),
                        [&track_id](const Cancion& cancion) { return cancion.track_id == track_id; });
 
@@ -332,7 +333,7 @@ void eliminarDeColeccion(const string& track_id) {
         cout << "No se encontró la canción con el Track ID: " << track_id << "\n";
     }
 }
-3. Persistencia de Datos
+# 3. Persistencia de Datos
 Se implementó la función guardarListaReproduccionEnArchivo, que guarda las canciones de la lista de reproducción en un archivo de texto llamado repo.txt. Esta funcionalidad asegura que la lista de reproducción se conserve incluso después de cerrar el programa. El archivo se sobrescribe cada vez que se realiza una modificación en la lista de canciones (agregar o eliminar canciones).
 
 Código:
@@ -359,7 +360,7 @@ void guardarListaReproduccionEnArchivo() const {
 
 Por otro lado, también se implementó la función cargarListaDeReproduccionDesdeArchivo, que permite cargar la lista de reproducción previamente guardada en repo.txt. Esto es útil para restaurar el estado de la lista de canciones al reiniciar el programa.
 
-4. Interfaz de Usuario Mejorada
+# 4. Interfaz de Usuario Mejorada
 Se agregaron nuevas opciones en el menú interactivo del programa. Ahora el usuario puede elegir entre varias opciones, como cargar canciones desde un archivo, agregar o eliminar canciones de la lista de reproducción, mostrar la lista de reproducción actual, y guardar los cambios en un archivo.
 
 Menú actualizado:
@@ -374,9 +375,9 @@ void mostrarMenu() {
     cout << "7. Salir\n";
     cout << "Seleccione una opción: ";
 }
-El usuario puede seleccionar las opciones con un número del 1 al 7, lo que permite una navegación intuitiva y fácil para gestionar las canciones.
+  El usuario puede seleccionar las opciones con un número del 1 al 7, lo que permite una navegación intuitiva y fácil para gestionar las canciones.
 
-5. Flujo del Programa
+# 5. Flujo del Programa
 El flujo del programa sigue una estructura interactiva donde el usuario elige una opción del menú. Dependiendo de la opción seleccionada, el programa ejecutará una de las funciones previamente descritas, como cargar canciones, agregar o eliminar canciones de la lista, mostrar la lista de reproducción actual o guardar los cambios en un archivo.
 
 El ciclo continuará hasta que el usuario seleccione la opción de salir del programa.
