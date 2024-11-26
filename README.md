@@ -286,5 +286,98 @@ int main() {
     return 0;
 }
 ```
+# Informe de Actualización: Parte 2 - Final de Estructura
+  Fecha: 26 de noviembre de 2024
+  Autor: Carlos Cano
 
+## Introducción
+  En esta fase del proyecto, se ha mejorado la estructura del programa para gestionar una lista de reproducción de canciones en formato CSV. Se implementaron diversas funcionalidades clave, incluyendo la gestión de canciones (agregar y eliminar) y la persistencia de datos (guardado y carga de la lista de reproducción desde un archivo). A continuación se describen los cambios y las mejoras realizadas.
+
+  1. Uso de unordered_map para acceso rápido
+Una de las principales optimizaciones realizadas fue la introducción de un unordered_map llamado canciones_map. Este mapa permite acceder a las canciones de manera eficiente utilizando el track_id como clave. A diferencia de una lista, que requiere recorrer todos sus elementos para encontrar uno específico, el unordered_map permite acceder a cualquier canción directamente mediante su track_id en tiempo constante, mejorando así el rendimiento del programa al gestionar grandes cantidades de canciones.
+
+Código:
+
+unordered_map<string, Cancion> canciones_map;
+2. Gestión de la Lista de Reproducción
+a) Agregar Canciones a la Colección
+Se implementó la función agregarAColeccion, que permite agregar canciones a la lista de reproducción utilizando su track_id. La función busca el track_id en el unordered_map y, si lo encuentra, agrega la canción a la lista de reproducción canciones_agregadas.
+
+Código:
+
+void agregarAColeccion(const string& track_id) {
+    auto it = canciones_map.find(track_id);
+    if (it != canciones_map.end()) {
+        canciones_agregadas.push_back(it->second);
+        cout << "Canción agregada a la lista de reproducción.\n";
+        guardarListaReproduccionEnArchivo();  // Actualizar archivo
+    } else {
+        cout << "Track ID no encontrado.\n";
+    }
+}
+b) Eliminar Canciones de la Colección
+La nueva funcionalidad de eliminación de canciones se implementó mediante la función eliminarDeColeccion, que permite eliminar canciones de la lista de reproducción por su track_id. Se realiza una búsqueda en la lista de canciones agregadas y, si se encuentra la canción, se elimina de la lista.
+
+Código:
+
+void eliminarDeColeccion(const string& track_id) {
+    auto it = find_if(canciones_agregadas.begin(), canciones_agregadas.end(),
+                       [&track_id](const Cancion& cancion) { return cancion.track_id == track_id; });
+
+    if (it != canciones_agregadas.end()) {
+        canciones_agregadas.erase(it);
+        cout << "Canción eliminada de la lista de reproducción.\n";
+        guardarListaReproduccionEnArchivo();  // Actualizar archivo
+    } else {
+        cout << "No se encontró la canción con el Track ID: " << track_id << "\n";
+    }
+}
+3. Persistencia de Datos
+Se implementó la función guardarListaReproduccionEnArchivo, que guarda las canciones de la lista de reproducción en un archivo de texto llamado repo.txt. Esta funcionalidad asegura que la lista de reproducción se conserve incluso después de cerrar el programa. El archivo se sobrescribe cada vez que se realiza una modificación en la lista de canciones (agregar o eliminar canciones).
+
+Código:
+
+void guardarListaReproduccionEnArchivo() const {
+    ofstream file("repo.txt", ios::trunc);  // Abrir el archivo en modo truncado para sobrescribirlo
+    if (!file.is_open()) {
+        cerr << "Error al guardar el archivo repo.txt.\n";
+        return;
+    }
+
+    // Escribir las canciones en el archivo
+    for (const auto& cancion : canciones_agregadas) {
+        file << cancion.artist_name << "," << cancion.track_name << "," << cancion.track_id << ","
+             << cancion.popularity << "," << cancion.year << "," << cancion.genre << ","
+             << cancion.danceability << "," << cancion.energy << "," << cancion.key << ","
+             << cancion.loudness << "," << cancion.mode << "," << cancion.speechiness << ","
+             << cancion.acousticness << "," << cancion.instrumentalness << "," << cancion.liveness << ","
+             << cancion.valence << "," << cancion.tempo << "," << cancion.duration_ms << ","
+             << cancion.time_signature << "\n";
+    }
+
+    file.close();
+
+Por otro lado, también se implementó la función cargarListaDeReproduccionDesdeArchivo, que permite cargar la lista de reproducción previamente guardada en repo.txt. Esto es útil para restaurar el estado de la lista de canciones al reiniciar el programa.
+
+4. Interfaz de Usuario Mejorada
+Se agregaron nuevas opciones en el menú interactivo del programa. Ahora el usuario puede elegir entre varias opciones, como cargar canciones desde un archivo, agregar o eliminar canciones de la lista de reproducción, mostrar la lista de reproducción actual, y guardar los cambios en un archivo.
+
+Menú actualizado:
+
+void mostrarMenu() {
+    cout << "\n1. Cargar canciones desde archivo\n";
+    cout << "2. Agregar canción a la lista de reproducción\n";
+    cout << "3. Eliminar canción de la lista de reproducción\n";
+    cout << "4. Mostrar lista de reproducción\n";
+    cout << "5. Guardar lista de reproducción en archivo\n";
+    cout << "6. Cargar lista de reproducción desde archivo\n";
+    cout << "7. Salir\n";
+    cout << "Seleccione una opción: ";
+}
+El usuario puede seleccionar las opciones con un número del 1 al 7, lo que permite una navegación intuitiva y fácil para gestionar las canciones.
+
+5. Flujo del Programa
+El flujo del programa sigue una estructura interactiva donde el usuario elige una opción del menú. Dependiendo de la opción seleccionada, el programa ejecutará una de las funciones previamente descritas, como cargar canciones, agregar o eliminar canciones de la lista, mostrar la lista de reproducción actual o guardar los cambios en un archivo.
+
+El ciclo continuará hasta que el usuario seleccione la opción de salir del programa.
 
